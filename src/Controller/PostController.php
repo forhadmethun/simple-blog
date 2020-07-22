@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 /**
  * @Route("/admin/post", name="post.")
  */
@@ -30,57 +31,67 @@ class PostController extends AbstractController
         ]);
     }
 
-
-    /**
-     * @Route("/create", name="create")
-     */
-    public function create(Request $request){
-        $post = new Post();
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted()){
-            $em = $this->getDoctrine()->getManager();
-//            dump($post);
-        $em->persist($post);
-        $em->flush();
-            return $this->redirect($this->generateUrl('post.index'));
-
-
-        }
-        $post->setTitle('This is a title');
-
-//        return new Response('Post was created');
-        return $this->render('post/create.html.twig', [
-           'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/create/{text}", name="create-text")
-     * @param $text
-     * @return Response
-     */
-    public function createText($text){
-        $post = new Post();
-        $post->setTitle($text);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($post);
-        $em->flush();
-        return new Response('Post was created');
-    }
-
     /**
      * @Route("/show/{id}", name="show")
      * @param $id
      * @param PostRepository $repository
      * @return JsonResponse
      */
-    public function show($id, PostRepository $repository){
+    public function show($id, PostRepository $repository)
+    {
         $post = $repository->find($id);
         return $this->render('post/show.html.twig', [
             'controller_name' => 'PostController',
             'post' => $post
+        ]);
+    }
+
+    /**
+     * @Route("/create", name="create")
+     * @param Request $request
+     * @return RedirectResponse|Response
+     */
+    public function create(Request $request)
+    {
+        $post = new Post();
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $em = $this->getDoctrine()->getManager();
+            $post->setUser($this->getUser());
+            $post->setCreatedAt(new \DateTime());
+            $em->persist($post);
+            $em->flush();
+            $this->addFlash('success', 'Post created!');
+            return $this->redirect($this->generateUrl('post.index'));
+        }
+        return $this->render('post/create.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/edit/{id}", name="edit")
+     * @param $id
+     * @param Request $request
+     * @param PostRepository $repository
+     * @return RedirectResponse
+     */
+    public function edit($id, Request $request,  PostRepository $repository)
+    {
+        $post = $repository->find($id);
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($post);
+            $em->flush();
+            $this->addFlash('success', 'Post edited!');
+            return $this->redirect($this->generateUrl('post.index'));
+        }
+        return $this->render('post/create.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 
@@ -90,7 +101,8 @@ class PostController extends AbstractController
      * @param PostRepository $repository
      * @return RedirectResponse
      */
-    public function delete($id, PostRepository $repository){
+    public function delete($id, PostRepository $repository)
+    {
         $post = $repository->find($id);
         $em = $this->getDoctrine()->getManager();
         $em->remove($post);

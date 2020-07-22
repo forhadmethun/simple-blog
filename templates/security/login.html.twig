@@ -16,6 +16,10 @@
                 </div>
             {% endif %}
 
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+
             <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
             <div class="form-group">
             <label for="inputUsername">Username</label>

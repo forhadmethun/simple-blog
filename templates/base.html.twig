@@ -9,6 +9,7 @@
     <meta name="robots" content="all,follow">
     <!-- Bootstrap CSS-->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/jquery.dataTables.css">
     <!-- Google fonts - Open Sans-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
     <!-- Fancy Box-->
@@ -73,6 +74,7 @@
                     <ul class="langs navbar-text">
 
                         {% if app.user %}
+                            <a href="{{ path('post.index') }}">Dashboard</a> |
                             <a href="{{ path('app_logout') }}">Log out</a>
                         {% endif %}
 
@@ -80,8 +82,6 @@
                             <a href="{{ path('app_login') }}">Log in</a> &nbsp; &nbsp;
                             <a href="{{ path('user_registration') }}">Register</a>
                         {% endif %}
-
-
                     </ul>
                 </div>
             </div>
@@ -174,12 +174,18 @@
 <button type="button" data-toggle="collapse" data-target="#style-switch" id="style-switch-button"
         class="btn btn-primary btn-sm hidden-xs hidden-sm"><i class="fa fa-cog fa-2x"></i></button>
 <!-- Javascript files-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/js/jquery.min.js"></script>
 <script src="/js/tether.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <script src="/js/jquery.cookie.js"></script>
 <script src="/js/jquery.fancybox.min.js"></script>
 <script src="/js/animsition.min.js"></script>
 <script src="/js/front.js"></script>
+<script src="/js/jquery.dataTables.js"></script>
+<script>
+    $(document).ready( function () {
+        $('#table_id').DataTable();
+    } );
+</script>
 </body>
 </html>

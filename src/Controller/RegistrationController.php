@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +38,7 @@ class RegistrationController extends AbstractController
 //        $form = $this->createForm(UserType::class, $user);
         $form = $this->createFormBuilder()
             ->add('username')
-            ->add('password')
+            ->add('password', PasswordType::class)
             ->add('register', SubmitType::class, ['label' => 'Create User'])
             ->getForm();
 
@@ -58,7 +59,7 @@ class RegistrationController extends AbstractController
 
             // ... do any other work - like sending them an email, etc
             // maybe set a "flash" success message for the user
-
+            $this->addFlash('success', 'User creation successful!');
             return $this->redirect($this->generateUrl('app_login'));
         }
 

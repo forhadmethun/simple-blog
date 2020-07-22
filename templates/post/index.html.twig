@@ -1,33 +1,41 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <div class="col-md-2"></div>
-<div class="col-md-8">
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
-    <h2>List of All Posts</h2>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <td>ID</td>
-            <td>Title</td>
-        </tr>
-        </thead>
-    <tbody>
-    {% for post in posts %}
-        <tr>
-            <td>{{ post.id }}</td>
-            <td>
-                <a href="{{ path('post.show', {id: post.id}) }}">{{ post.title }}</a>
-            </td>
-            <td>
-                <a class="text-danger" href="{{ path('post.delete', {id: post.id}) }}">Delete</a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-    </table>
-</div>
+    <div class="col-md-8">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+        <h3>All Posts</h3> <a style="margin: 5px;" class="btn btn-success float-right" href="{{ path('post.create') }}">Add Post</a>
+        <table id="table_id" class="display table table-striped">
+            <thead>
+            <tr>
+                <td>Title</td>
+                <td>Description</td>
+                <td>Delete</td>
+                <td>Edit</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>
+                        <a href="{{ path('post.show', {id: post.id}) }}">{{ post.title }}</a>
+                    </td>
+                    <td>
+                        <p>{{ post.description|raw}}</p>
+                    </td>
+                    <td>
+                        <a class="text-danger" href="{{ path('post.delete', {id: post.id}) }}">Delete</a>
+                    </td>
+
+                    <td>
+                        <a class="text-gray" href="{{ path('post.edit', {id: post.id}) }}">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div class="col-md-2"></div>
 
 {% endblock %}
