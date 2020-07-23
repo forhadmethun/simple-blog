@@ -46,7 +46,7 @@
                     <div class="close-btn"><i class="icon-close"></i></div>
                     <div class="row">
                         <div class="col-md-8 push-md-2">
-                            <form action="#">
+                            <form action="{{ path('blog') }}" id="search_form_header" >
                                 <div class="form-group">
                                     <input type="search" name="search" id="search"
                                            placeholder="What are you looking for?">
@@ -165,6 +165,11 @@
 </script>
 
 <script>
+    function getBaseUrl() {
+        var base_url = window.location.origin;
+        return base_url + "/";
+    }
+
     $(document).ready(function () {
         $("#comment_form").submit(function (e) {
             e.preventDefault();
@@ -196,7 +201,6 @@
             }).always(function () {
                 console.log('always called');
             });
-
         });
     });
 
@@ -223,11 +227,6 @@
             '                        </div>';
     }
 
-    function getBaseUrl() {
-        var base_url = window.location.origin;
-        return base_url + "/";
-    }
-
     function deleteComment(commentId) {
         $.ajax({
             headers: {
@@ -246,6 +245,27 @@
                 comments += generateSingleComment(output[index], true);
             }
             $("#comments").html(comments);
+        }).fail(function (output) {
+            console.log("Ajax call failed");
+        }).always(function () {
+            console.log('always called');
+        });
+    }
+
+    function handleSearch(searchParam) {
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            url: getBaseUrl() + 'blog/search',
+            type: 'POST',
+            data: JSON.stringify({
+                'search' : searchParam
+            }),
+            dataType: 'json',
+            async: true
+        }).done(function (output) {
         }).fail(function (output) {
             console.log("Ajax call failed");
         }).always(function () {

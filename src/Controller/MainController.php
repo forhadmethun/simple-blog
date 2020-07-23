@@ -19,7 +19,7 @@ class MainController extends AbstractController
     /**
      * @Route("/", name="main")
      * @param PostRepository $repository
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function index(PostRepository $repository)
     {
@@ -28,26 +28,33 @@ class MainController extends AbstractController
 
     /**
      * @Route("/blog", name="blog")
+     * @param Request $request
      * @param PostRepository $repository
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function blog(PostRepository $repository)
+    public function blog(Request $request, PostRepository $repository)
     {
-        $posts = $repository->findAll();
+        $searchParam = $request->query->get('search');
+        if($searchParam!=null){
+            $posts = $repository->searchByParameter($searchParam);
+        }
+        else{
+            $posts = $repository->findAll();
+        }
         return $this->render('home/index.html.twig', [
             'posts' => $posts
         ]);
     }
 
     /**
-     * @Route("/blog/comment/{id}", name="comment")
+     * @Route("/blog/comment/{id}", name="comment.create")
      * @param $id
      * @param Request $request
      * @param PostRepository $postRepository
      * @param CommentRepository $commentRepository
      * @return JsonResponse
      */
-    public function comment($id, Request $request,
+    public function commentCreate($id, Request $request,
                             PostRepository $postRepository,
                             CommentRepository $commentRepository
     )
@@ -92,7 +99,7 @@ class MainController extends AbstractController
      * @param CommentRepository $commentRepository
      * @return JsonResponse
      */
-    public function commentdelete($id, Request $request,
+    public function commentDelete($id, Request $request,
                             PostRepository $postRepository,
                             CommentRepository $commentRepository
     )
@@ -119,7 +126,6 @@ class MainController extends AbstractController
         return new JsonResponse($arrayCollection);
     }
 
-
     /**
      * @Route("/blog/{id}", name="show")
      * @param $id
@@ -140,6 +146,8 @@ class MainController extends AbstractController
             'post' => $post
         ]);
     }
+
+
 
 
 }
