@@ -104,4 +104,27 @@ class Post
      */
     private $createdAt;
 
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", cascade="all", orphanRemoval=true)
+     *
+     */
+    private $comments;
+
+    /**
+     * @return mixed
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param mixed $comments
+     */
+    public function setComments($comments): void
+    {
+        $this->comments = $comments;
+    }
+
 }

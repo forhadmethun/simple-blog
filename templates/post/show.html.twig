@@ -24,49 +24,33 @@
                     <div class="post-tags">
                         <a href="#" class="tag">#</a>
                     </div>
-                    <div class="post-comments">
+                    <div class="post-comments" >
                         <header>
-                            <h3 class="h6">Post Comments<span class="no-of-comments">(3)</span></h3>
+                            <u><h3 class="h6">Comments<span class="no-of-comments">...</span></h3></u>
                         </header>
+                        <div id="comments">
+                        {% for comment in post.comments %}
                         <div class="comment">
                             <div class="comment-header d-flex justify-content-between">
                                 <div class="user d-flex align-items-center">
                                     <div class="image"><img src="/img/user.svg" alt="..." class="img-fluid rounded-circle"></div>
-                                    <div class="title"><strong>Jabi Hernandiz</strong><span class="date">May 2016</span></div>
+                                    <div class="title"><strong>{{ comment.commenterName }} | {{ comment.commenterEmail }}</strong><span class="date">{{ comment.createdAt|date('m-d-Y') }}</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="comment-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+                                <p>{{ comment.commentBody }}</p>
                             </div>
                         </div>
-                        <div class="comment">
-                            <div class="comment-header d-flex justify-content-between">
-                                <div class="user d-flex align-items-center">
-                                    <div class="image"><img src="/img/user.svg" alt="..." class="img-fluid rounded-circle"></div>
-                                    <div class="title"><strong>Nikolas</strong><span class="date">May 2016</span></div>
-                                </div>
-                            </div>
-                            <div class="comment-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                            </div>
+                        {% endfor %}
                         </div>
-                        <div class="comment">
-                            <div class="comment-header d-flex justify-content-between">
-                                <div class="user d-flex align-items-center">
-                                    <div class="image"><img src="/img/user.svg" alt="..." class="img-fluid rounded-circle"></div>
-                                    <div class="title"><strong>John Doe</strong><span class="date">May 2016</span></div>
-                                </div>
-                            </div>
-                            <div class="comment-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="add-comment">
                         <header>
                             <h3 class="h6">Leave a reply</h3>
                         </header>
-                        <form action="#" class="commenting-form">
+                        <form id="comment_form" class="commenting-form">
                             <div class="row">
                                 <div class="form-group col-md-6">
                                     <input type="text" name="username" id="username" placeholder="Name" class="form-control">
@@ -101,5 +85,8 @@
             </form>
         </div>
     </aside>
+        <script>
+            post_id = {{ post.id }};
+        </script>
     {% endif %}
 {% endblock %}

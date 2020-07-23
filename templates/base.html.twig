@@ -32,6 +32,9 @@
     <!-- Tweaks for older IEs--><!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    <script>
+        var post_id = 1;
+    </script>
 </head>
 <body>
 <div class="animsition">
@@ -57,7 +60,8 @@
             <div class="container">
                 <!-- Navbar Brand -->
                 <div class="navbar-header d-flex align-items-center justify-content-between">
-                    <!-- Navbar Brand --><a  href="{{ path('main') }}" class="navbar-brand animsition-link">Simple Blog</a>
+                    <!-- Navbar Brand --><a href="{{ path('main') }}" class="navbar-brand animsition-link">Simple
+                        Blog</a>
                     <!-- Toggle Button-->
                     <button type="button" data-toggle="collapse" data-target="#navbarcollapse"
                             aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle navigation"
@@ -67,8 +71,8 @@
                 <div id="navbarcollapse" class="collapse navbar-collapse">
                     <ul class="navbar-nav ml-auto">
                         <!-- Search-->
-                        <li class="nav-item"><a  href="{{ path('main') }}" class="nav-link animsition-link active">Home</a></li>
-                        <li class="nav-item"><a  href="{{ path('main') }}" class="nav-link animsition-link">Blog</a></li>
+                        {#                        <li class="nav-item"><a  href="{{ path('main') }}" class="nav-link animsition-link active">Home</a></li>#}
+                        {#                        <li class="nav-item"><a  href="{{ path('main') }}" class="nav-link animsition-link">Blog</a></li>#}
                     </ul>
                     <div class="navbar-text"><a href="#" class="search-btn"><i class="icon-search-1"></i></a></div>
                     <ul class="langs navbar-text">
@@ -88,21 +92,17 @@
         </nav>
     </header>
     <div class="container">
-
-        <div class="row">
-            {# ... #}
+        <div class="row" style="min-height: 500px">
             {% block body %}{% endblock %}
-
         </div>
-
-
     </div>
     {% block javascripts %}{% endblock %}
     <!-- Page Footer-->
     <footer class="main-footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
                     <div class="logo">
                         <h6 class="text-white">Simple Blog</h6>
                     </div>
@@ -118,7 +118,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="menus d-flex">
                         <ul class="list-unstyled">
                             <li><a href="#">My Account</a></li>
@@ -132,30 +132,6 @@
                             <li><a href="#">Contact</a></li>
                         </ul>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="latest-posts"><a href="#">
-                            <div class="post d-flex align-items-center">
-                                <div class="image"><img src="/img/small-thumbnail-1.jpg" alt="..." class="img-fluid">
-                                </div>
-                                <div class="title"><strong>Hotels for all budgets</strong><span class="date last-meta">October 26, 2016</span>
-                                </div>
-                            </div>
-                        </a><a href="#">
-                            <div class="post d-flex align-items-center">
-                                <div class="image"><img src="/img/small-thumbnail-2.jpg" alt="..." class="img-fluid">
-                                </div>
-                                <div class="title"><strong>Great street atrs in London</strong><span
-                                            class="date last-meta">October 26, 2016</span></div>
-                            </div>
-                        </a><a href="#">
-                            <div class="post d-flex align-items-center">
-                                <div class="image"><img src="/img/small-thumbnail-3.jpg" alt="..." class="img-fluid">
-                                </div>
-                                <div class="title"><strong>Best coffee shops in Sydney</strong><span
-                                            class="date last-meta">October 26, 2016</span></div>
-                            </div>
-                        </a></div>
                 </div>
             </div>
         </div>
@@ -183,9 +159,100 @@
 <script src="/js/front.js"></script>
 <script src="/js/jquery.dataTables.js"></script>
 <script>
-    $(document).ready( function () {
+    $(document).ready(function () {
         $('#table_id').DataTable();
-    } );
+    });
 </script>
+
+<script>
+    $(document).ready(function () {
+        $("#comment_form").submit(function (e) {
+            e.preventDefault();
+            var commentElements = $("#comment_form").serializeArray()
+            $("#comment_form")[0].reset();
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                url: getBaseUrl() + 'blog/comment/' + post_id,
+                type: 'POST',
+                data: JSON.stringify({
+                    'commenterName': commentElements[0].value,
+                    'commenterEmail': commentElements[1].value,
+                    'commentBody': commentElements[2].value
+                }),
+                dataType: 'json',
+                async: true
+            }).done(function (output) {
+                $("#comments").html('');
+                let comments = '';
+                for (let index = 0; index < output.length; ++index) {
+                    comments += generateSingleComment(output[index], false);
+                }
+                $("#comments").html(comments);
+            }).fail(function (output) {
+                console.log("Ajax call failed");
+            }).always(function () {
+                console.log('always called');
+            });
+
+        });
+    });
+
+    function generateSingleComment(comment, isCommentDelete) {
+        var commentElement = '';
+        {% if app.user %}
+        commentElement = '<a href="#" onclick="deleteComment(' + comment.id + ');return false;" class="text-danger">Delete</a>\n';
+        {% endif %}
+        if (!isCommentDelete) {
+            commentElement = '';
+        }
+        return '<div class="comment">\n' +
+            '                            <div class="comment-header d-flex justify-content-between">\n' +
+            '                                <div class="user d-flex align-items-center">\n' +
+            '                                    <div class="image"><img src="/img/user.svg" alt="..." class="img-fluid rounded-circle"></div>\n' +
+            '                                    <div class="title"><strong>' + comment.commenterName + ' | ' + comment.commenterEmail + '</strong><span class="date">' + new Date(comment.createdAt.date).toLocaleDateString("en-US") + '</span>' +
+            ' ' + commentElement + '\n' +
+            '</div>\n' +
+            '                                </div>\n' +
+            '                            </div>\n' +
+            '                            <div class="comment-body">\n' +
+            '                                <p>' + comment.commentBody + '</p>\n' +
+            '                            </div>\n' +
+            '                        </div>';
+    }
+
+    function getBaseUrl() {
+        var base_url = window.location.origin;
+        return base_url + "/";
+    }
+
+    function deleteComment(commentId) {
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            url: getBaseUrl() + 'blog/comment/delete/' + commentId,
+            type: 'POST',
+            data: null,
+            dataType: 'json',
+            async: true
+        }).done(function (output) {
+            $("#comments").html('');
+            let comments = '';
+            for (let index = 0; index < output.length; ++index) {
+                comments += generateSingleComment(output[index], true);
+            }
+            $("#comments").html(comments);
+        }).fail(function (output) {
+            console.log("Ajax call failed");
+        }).always(function () {
+            console.log('always called');
+        });
+    }
+</script>
+
 </body>
 </html>

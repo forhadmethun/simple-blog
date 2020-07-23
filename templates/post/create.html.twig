@@ -6,6 +6,39 @@
     <div class="col-md-2"></div>
     <div class="col-md-8">
         {{ form(form) }}
+
+        {% if comments is defined %}
+        <main class="post blog-post col-lg-8">
+            <div class="container">
+                <div class="post-single">
+                    <div class="post-details">
+
+        <div class="post-comments" >
+            <div id="comments">
+                {% for comment in comments %}
+                    <div class="comment">
+                        <div class="comment-header d-flex justify-content-between">
+                            <div class="user d-flex align-items-center">
+                                <div class="image"><img src="/img/user.svg" alt="..." class="img-fluid rounded-circle"></div>
+                                <div class="title"><strong>{{ comment.commenterName }} | {{ comment.commenterEmail }}</strong><span class="date">{{ comment.createdAt|date('m-d-Y') }}</span>
+                                    {% if app.user %}
+                                        <a href="#" onclick="deleteComment({{ comment.id }});return false;" class="text-danger">Delete</a>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-body">
+                            <p>{{ comment.commentBody }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+                    </div></div></div></main>
+        {% endif %}
+
     </div>
     <div class="col-md-2"></div>
 

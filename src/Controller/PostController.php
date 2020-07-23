@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Form\PostType;
+use App\Repository\CommentRepository;
 use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -79,9 +80,13 @@ class PostController extends AbstractController
      * @param $id
      * @param Request $request
      * @param PostRepository $repository
+     * @param CommentRepository $commentRepository
      * @return RedirectResponse
      */
-    public function edit($id, Request $request,  PostRepository $repository)
+    public function edit($id, Request $request,
+                         PostRepository $repository,
+                         CommentRepository $commentRepository
+    )
     {
         $post = $repository->find($id);
         $form = $this->createForm(PostType::class, $post);
@@ -93,8 +98,22 @@ class PostController extends AbstractController
             $this->addFlash('success', 'Post edited!');
             return $this->redirect($this->generateUrl('post.index'));
         }
+        $comments = $commentRepository->findBy([
+            'post' => $id
+        ]);
+        $arrayCollection = array();
+        foreach ($comments as $c) {
+            $arrayCollection[] = array(
+                'id' => $c->getId(),
+                'commenterName' => $c->getCommenterName(),
+                'commenterEmail' => $c->getCommenterEmail(),
+                'commentBody' => $c->getCommentBody(),
+                'createdAt' => $c->getCreatedAt(),
+            );
+        }
         return $this->render('post/create.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'comments' => $arrayCollection
         ]);
     }
 
