@@ -18,6 +18,12 @@ class PostRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Post::class);
     }
+
+    /**
+     * Used to search blog posts by title or description.
+     * @param $value
+     * @return int|mixed|string
+     */
     public function searchByParameter($value)
     {
         $value = '%' . $value . '%';

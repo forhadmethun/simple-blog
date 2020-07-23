@@ -18,4 +18,21 @@ class CommentRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Comment::class);
     }
+
+    public function getAllCommentsAsCollectionByPostId($id){
+        $comments = $this->findBy([
+            'post' => $id
+        ]);
+        $commentCollection = array();
+        foreach ($comments as $c) {
+            $commentCollection[] = array(
+                'id' => $c->getId(),
+                'commenterName' => $c->getCommenterName(),
+                'commenterEmail' => $c->getCommenterEmail(),
+                'commentBody' => $c->getCommentBody(),
+                'createdAt' => $c->getCreatedAt(),
+            );
+        }
+        return $commentCollection;
+    }
 }

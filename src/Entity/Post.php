@@ -27,6 +27,25 @@ class Post
      */
     private $description;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="createdAt", type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", cascade="all", orphanRemoval=true)
+     *
+     */
+    private $comments;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,18 +72,13 @@ class Post
         $this->description = $description;
     }
 
-    public function setTitle(string $title): self
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title): void
     {
         $this->title = $title;
-
-        return $this;
     }
-
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    private $user;
 
     /**
      * @return mixed
@@ -99,19 +113,6 @@ class Post
     }
 
     /**
-     * @var \DateTime
-     * @ORM\Column(name="createdAt", type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     *
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post", cascade="all", orphanRemoval=true)
-     *
-     */
-    private $comments;
-
-    /**
      * @return mixed
      */
     public function getComments()
@@ -126,5 +127,4 @@ class Post
     {
         $this->comments = $comments;
     }
-
 }

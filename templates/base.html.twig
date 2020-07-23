@@ -46,10 +46,10 @@
                     <div class="close-btn"><i class="icon-close"></i></div>
                     <div class="row">
                         <div class="col-md-8 push-md-2">
-                            <form action="{{ path('blog') }}" id="search_form_header" >
+                            <form action="{{ path('blog') }}" id="search_form_header">
                                 <div class="form-group">
                                     <input type="search" name="search" id="search"
-                                           placeholder="What are you looking for?">
+                                           placeholder="Search by Title or Description">
                                     <button type="submit" class="submit"><i class="icon-search-1"></i></button>
                                 </div>
                             </form>
@@ -70,9 +70,6 @@
                 <!-- Navbar Menu -->
                 <div id="navbarcollapse" class="collapse navbar-collapse">
                     <ul class="navbar-nav ml-auto">
-                        <!-- Search-->
-                        {#                        <li class="nav-item"><a  href="{{ path('main') }}" class="nav-link animsition-link active">Home</a></li>#}
-                        {#                        <li class="nav-item"><a  href="{{ path('main') }}" class="nav-link animsition-link">Blog</a></li>#}
                     </ul>
                     <div class="navbar-text"><a href="#" class="search-btn"><i class="icon-search-1"></i></a></div>
                     <ul class="langs navbar-text">
@@ -245,27 +242,6 @@
                 comments += generateSingleComment(output[index], true);
             }
             $("#comments").html(comments);
-        }).fail(function (output) {
-            console.log("Ajax call failed");
-        }).always(function () {
-            console.log('always called');
-        });
-    }
-
-    function handleSearch(searchParam) {
-        $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            url: getBaseUrl() + 'blog/search',
-            type: 'POST',
-            data: JSON.stringify({
-                'search' : searchParam
-            }),
-            dataType: 'json',
-            async: true
-        }).done(function (output) {
         }).fail(function (output) {
             console.log("Ajax call failed");
         }).always(function () {

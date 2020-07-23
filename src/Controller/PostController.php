@@ -20,11 +20,10 @@ class PostController extends AbstractController
 {
     /**
      * @Route("/", name="index")
-     * @param Request $request
      * @param PostRepository $postRepository
      * @return Response
      */
-    public function index(Request $request, PostRepository $postRepository)
+    public function index(PostRepository $postRepository)
     {
         $posts = $postRepository->findBy([
             'user' => $this->getUser()->getId()
@@ -38,12 +37,12 @@ class PostController extends AbstractController
     /**
      * @Route("/show/{id}", name="show")
      * @param $id
-     * @param PostRepository $repository
+     * @param PostRepository $postRepository
      * @return JsonResponse
      */
-    public function show($id, PostRepository $repository)
+    public function show($id, PostRepository $postRepository)
     {
-        $post = $repository->find($id);
+        $post = $postRepository->find($id);
         return $this->render('post/show.html.twig', [
             'controller_name' => 'PostController',
             'post' => $post
@@ -70,6 +69,7 @@ class PostController extends AbstractController
             $this->addFlash('success', 'Post created!');
             return $this->redirect($this->generateUrl('post.index'));
         }
+
         return $this->render('post/create.html.twig', [
             'form' => $form->createView()
         ]);
@@ -83,14 +83,17 @@ class PostController extends AbstractController
      * @param CommentRepository $commentRepository
      * @return RedirectResponse
      */
-    public function edit($id, Request $request,
-                         PostRepository $repository,
-                         CommentRepository $commentRepository
+    public function edit(
+        $id,
+        Request $request,
+        PostRepository $repository,
+        CommentRepository $commentRepository
     )
     {
         $post = $repository->find($id);
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
+
         if ($form->isSubmitted()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($post);
@@ -98,22 +101,11 @@ class PostController extends AbstractController
             $this->addFlash('success', 'Post edited!');
             return $this->redirect($this->generateUrl('post.index'));
         }
-        $comments = $commentRepository->findBy([
-            'post' => $id
-        ]);
-        $arrayCollection = array();
-        foreach ($comments as $c) {
-            $arrayCollection[] = array(
-                'id' => $c->getId(),
-                'commenterName' => $c->getCommenterName(),
-                'commenterEmail' => $c->getCommenterEmail(),
-                'commentBody' => $c->getCommentBody(),
-                'createdAt' => $c->getCreatedAt(),
-            );
-        }
+
+        $commentCollection = $commentRepository->getAllCommentsAsCollectionByPostId($id);
         return $this->render('post/create.html.twig', [
             'form' => $form->createView(),
-            'comments' => $arrayCollection
+            'comments' => $commentCollection
         ]);
     }
 

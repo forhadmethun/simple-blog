@@ -5,35 +5,35 @@
         <div class="container">
             <div class="row">
                 {% for post in posts %}
-                <!-- post -->
-                <div class="post col-xl-6 border-0">
-                    <div class="post-details">
-                        <div class="post-meta d-flex justify-content-between">
-                            <div class="date meta-last">{{ post.createdAt|date('Y-m-d') }}</div>
+                    <div class="post col-xl-6 border-0">
+                        <div class="post-details">
+                            <div class="post-meta d-flex justify-content-between">
+                                <div class="date meta-last">{{ post.createdAt|date('Y-m-d') }}</div>
+                            </div>
+                            <a href="{{ path('show', {id: post.id}) }}" class="animsition-link">
+                                <h3 class="h4">{{ post.title }}</h3></a>
+                            <p class="text-muted">{{ post.description|raw }}</p>
+                            <footer class="post-footer d-flex align-items-center"><a href="#"
+                                                                                     class="author d-flex align-items-center flex-wrap">
+                                    <div class="title"><span>{{ post.user.username }}</span></div>
+                                </a>
+                                <div class="date"><i class="icon-clock"></i>.</div>
+                                <div class="comments meta-last"><i class="icon-comment"></i>.</div>
+                            </footer>
                         </div>
-                        <a href="{{ path('show', {id: post.id}) }}" class="animsition-link">
-                            <h3 class="h4">{{ post.title }}</h3></a>
-                        <p class="text-muted">{{ post.description|raw }}</p>
-                        <footer class="post-footer d-flex align-items-center"><a href="#" class="author d-flex align-items-center flex-wrap">
-                                <div class="title"><span>{{ post.user.username }}</span></div></a>
-                            <div class="date"><i class="icon-clock"></i>.</div>
-                            <div class="comments meta-last"><i class="icon-comment"></i>.</div>
-                        </footer>
                     </div>
-                </div>
                 {% endfor %}
             </div>
         </div>
     </main>
     <aside class="col-lg-4">
-        <!-- Widget [Search Bar Widget]-->
         <div class="widget search">
             <header>
                 <h3 class="h6">Search the blog</h3>
             </header>
             <form id="search_form" class="search-form">
                 <div class="form-group">
-                    <input type="search" name="search" placeholder="What are you looking for?">
+                    <input type="search" name="search" placeholder="Search By Title or Description">
                     <button type="submit" class="submit"><i class="icon-search"></i></button>
                 </div>
             </form>

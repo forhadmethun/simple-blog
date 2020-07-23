@@ -5,7 +5,8 @@
         {% for message in app.flashes('success') %}
             <div class="alert alert-success">{{ message }}</div>
         {% endfor %}
-        <h3>All Posts</h3> <a style="margin: 5px;" class="btn btn-success float-right" href="{{ path('post.create') }}">Add Post</a>
+        <h3>All Posts</h3> <a style="margin: 5px;" class="btn btn-success float-right" href="{{ path('post.create') }}">Add
+            Post</a>
         <table id="table_id" class="display table table-striped">
             <thead>
             <tr>
@@ -22,7 +23,7 @@
                         <a href="{{ path('post.show', {id: post.id}) }}">{{ post.title }}</a>
                     </td>
                     <td>
-                        <p>{{ post.description|raw}}</p>
+                        <p>{{ post.description|raw }}</p>
                     </td>
                     <td>
                         <a class="text-danger" href="{{ path('post.delete', {id: post.id}) }}">Delete</a>
@@ -37,5 +38,4 @@
         </table>
     </div>
     <div class="col-md-2"></div>
-
 {% endblock %}

@@ -70,7 +70,6 @@ class CustomAuthenticator extends AbstractFormLoginAuthenticator implements Pass
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $credentials['username']]);
 
         if (!$user) {
-            // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Username could not be found.');
         }
 
@@ -82,9 +81,7 @@ class CustomAuthenticator extends AbstractFormLoginAuthenticator implements Pass
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 
-    /**
-     * Used to upgrade (rehash) the user's password automatically over time.
-     */
+
     public function getPassword($credentials): ?string
     {
         return $credentials['password'];
@@ -95,9 +92,6 @@ class CustomAuthenticator extends AbstractFormLoginAuthenticator implements Pass
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
-
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-//        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
         return new RedirectResponse(
             $this->urlGenerator->generate('post.index')
         );
