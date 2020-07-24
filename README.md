@@ -16,7 +16,7 @@
 ## Technology Used
   Symfony Framework 5.1, Php 7.2.5 or higher, MySQL, Bootstrap 
     
-## Installation Guide
+# Installation Guide
   To run the application some softwares need to be installed. Here, the installation process is provided for linux Operating System(Ubuntu).
 ### Software needed
  -  PHP 7.2.5 or higher
@@ -70,7 +70,7 @@ php bin/console doctrine:schema:update --force
 symfony serve
 ```
 
-## Misc
+# Misc
  - Few front end libraries are added for better user experience
  - For registering/login Symfony security bundle added
  - Ckeditor bundle added in Symfony for adding/editing post in prettier way. 
