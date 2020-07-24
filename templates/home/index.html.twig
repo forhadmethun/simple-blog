@@ -12,7 +12,7 @@
                             </div>
                             <a href="{{ path('show', {id: post.id}) }}" class="animsition-link">
                                 <h3 class="h4">{{ post.title }}</h3></a>
-                            <p class="text-muted">{{ post.description|raw }}</p>
+                            <p class="text-muted"><a href="{{ path('show', {id: post.id}) }}">Continue reading ...</a></p>
                             <footer class="post-footer d-flex align-items-center"><a href="#"
                                                                                      class="author d-flex align-items-center flex-wrap">
                                     <div class="title"><span>{{ post.user.username }}</span></div>
